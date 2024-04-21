@@ -24,6 +24,7 @@
     "react-native-collapsible-tab-view": "^7.0.1",
     "react-native-dialog": "^9.3.0",
     "react-native-ios-kit": "^0.0.22",
+    "react-native-linear-gradient": "^2.8.3",
     "react-native-pager-view": "^6.3.0",
     "react-native-paper": "^5.12.3",
     "react-native-prompt-crossplatform": "^1.6.1",
