@@ -10,7 +10,7 @@ import DeviceCard from '../components/DeviceCard';
 
 const MainPage = ({username, imageUrl}) => {
   const [index, setIndex] = useState(0);
-  const [rooms, setRooms] = useState(['All Devices', 'Kitchen']);
+  const [rooms, setRooms] = useState(['All Devices']);
   const [room, setRoom] = useState();
   const [promptVisible, setPromptVisible] = useState(false);
 
@@ -31,63 +31,6 @@ const MainPage = ({username, imageUrl}) => {
           transition={1000}
         />
       </View>
-      <Divider style={{ backgroundColor: 'gray', height: 1 }} />
-      <Prompt
-        title="Add room"
-        placeholder="Enter the room name"
-        isVisible={promptVisible}
-        onChangeText={(text) => {
-          setRoom(text);
-        }}
-        onCancel={() => {
-          setPromptVisible(false);
-        }}
-        onSubmit={() => {
-          setPromptVisible(false);
-          setRooms([...rooms, room]);
-        }}
-      />
-
-      <View style={{flexDirection: 'row'}}>
-        <Button 
-          style={[styles.button, { marginLeft: 20, backgroundColor: '#ff6347' }]}
-          onPress={() => {
-            if (index !== 0) {
-              Alert.alert('Delete room', `Are you sure you want to delete the room "${rooms[index]}"?`, [
-                {
-                  text: 'No',
-                  style: 'cancel',
-                },
-                {
-                  text: 'Yes',
-                  onPress: () => {
-                    setRooms(rooms.filter((_, i) => i !== index));
-                    setIndex(rooms.length - 1);
-                  },
-                },
-              ]);
-            }
-          }}
-          mode='contained'
-          buttonColor={globalStyles.colors.primary}
-          textColor='#fff'
-        >
-          Delete current room
-        </Button>
-        
-        <Button 
-          style={styles.button}
-          onPress={() => {
-            setPromptVisible(true);
-          }}
-          mode='contained'
-          buttonColor={globalStyles.colors.primary}
-          textColor='#fff'
-        >
-          Add a room
-        </Button>
-      </View>
-      <Divider style={{ backgroundColor: 'gray', height: 1 }} />
 
       <Tab
         scrollable={rooms.length > 3}
@@ -113,18 +56,7 @@ const MainPage = ({username, imageUrl}) => {
           return (
             <TabView.Item style={styles.tabViewItem} key={index}>
               <View style={{ gap: 10 }}>
-                <DeviceCard
-                  deviceName={'Device 1'}
-                  energyUsage={0.1}
-                  handleStateToggle />
-                <DeviceCard
-                  deviceName={'Device 2'}
-                  energyUsage={0.7}
-                  handleStateToggle />
-                <DeviceCard
-                  deviceName={'Device 3'}
-                  energyUsage={0.3}
-                  handleStateToggle />
+                
               </View>
             </TabView.Item>
           )

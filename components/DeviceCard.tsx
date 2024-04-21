@@ -19,6 +19,7 @@ const DeviceCard = ({deviceName, energyUsage, handleStateToggle}) => {
           ios_backgroundColor="#3e3e3e"
           onValueChange={toggleSwitch}
           value={isEnabled}
+          onChange={handleStateToggle}
         />
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
