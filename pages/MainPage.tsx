@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Alert } from 'react-native';
 import { Tab, TabView } from '@rneui/themed';
 import { Image } from 'expo-image';
@@ -8,13 +8,28 @@ import Prompt from 'react-native-prompt-crossplatform';
 import globalStyles from '../globalStyles';
 import DeviceCard from '../components/DeviceCard';
 
-const MainPage = ({username, imageUrl}) => {
+import db from '../db.json';
+
+const MainPage = ({ username, imageUrl }) => {
   const [index, setIndex] = useState(0);
   const [rooms, setRooms] = useState(['All Devices']);
-  const [room, setRoom] = useState();
-  const [promptVisible, setPromptVisible] = useState(false);
 
-  return (  
+  const getEnergyUsage = (deviceId) => {
+    const sockets = db.sockets.filter(socket => socket.device_id === deviceId);
+    return sockets.reduce((total, socket) => {
+      const consumption = db.hourly_consumption.filter(consumption => consumption.socket_id === socket.socket_id)
+        .reduce((acc, cur) => acc + cur.con_value, 0);
+      return total + consumption;
+    }, 0);
+  }
+
+  useEffect(() => {
+    const uniqueRooms = [...new Set(db.devices.map(device => device.room))];
+    setRooms(['All Devices', ...uniqueRooms]);
+
+  }, []);
+
+  return (
     <View style={[StyleSheet.absoluteFill, { marginTop: 70, gap: 20 }]}>
       <View style={styles.headerContainer}>
         <Image
@@ -24,12 +39,6 @@ const MainPage = ({username, imageUrl}) => {
           transition={1000}
         />
         <Text style={styles.headerText}>Hamza's House</Text>
-        <Image
-          style={styles.image}
-          source="https://picsum.photos/seed/696/3000/2000"
-          contentFit="cover"
-          transition={1000}
-        />
       </View>
 
       <Tab
@@ -56,7 +65,18 @@ const MainPage = ({username, imageUrl}) => {
           return (
             <TabView.Item style={styles.tabViewItem} key={index}>
               <View style={{ gap: 10 }}>
-                
+                {db.devices.filter(device => (index === 0) ? true : device.room === room).map((device, index) => {
+                  return (
+                    <DeviceCard
+                      key={device.device_id}
+                      deviceName={`Device #${device.device_id}`}
+                      energyUsage={getEnergyUsage(device.device_id)}
+                      handleStateToggle={() => {
+                        
+                      }}
+                    />
+                  );
+                })}
               </View>
             </TabView.Item>
           )
@@ -86,7 +106,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'flex-end',
     color: '#fff',
-    marginRight: 40,
     lineHeight: 40,
   },
   tabViewItem: {
