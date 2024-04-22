@@ -1,22 +1,26 @@
 import { useState } from 'react';
-import { Text, View, StyleSheet, Alert } from 'react-native';
+import { Text, View, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { Tab, TabView } from '@rneui/themed';
 import { Image } from 'expo-image';
 import { Button, Divider } from 'react-native-paper';
 import Prompt from 'react-native-prompt-crossplatform';
 import LinearGradient from 'react-native-linear-gradient';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 
 import globalStyles from '../globalStyles';
 import DeviceCard from '../components/DeviceCard';
 
-const MainPage = ({username, imageUrl}) => {
+const MainPage = ({username, imageUrl, navigation}) => {
   const [index, setIndex] = useState(0);
   const [rooms, setRooms] = useState(['All Devices', 'Kitchen']);
   const [room, setRoom] = useState();
   const [promptVisible, setPromptVisible] = useState(false);
 
   return (  
-    // Profile Section
+    <NavigationContainer>
+      
     <View style={[StyleSheet.absoluteFill, { marginTop: 70, gap: 20 }]}>
       <View style={styles.headerContainer}>
         <Image
@@ -98,7 +102,7 @@ const MainPage = ({username, imageUrl}) => {
         indicatorStyle={{
           backgroundColor: globalStyles.colors.primary,
           height: 3,
-          width: 110, 
+          width: '30%', 
           marginHorizontal: 46,
         }}
         variant="default"
@@ -117,10 +121,15 @@ const MainPage = ({username, imageUrl}) => {
           return (
             <TabView.Item style={styles.tabViewItem} key={index}>
               <View style={{ gap: 10 }}>
+                <TouchableOpacity onPress={() => navigation.navigate('RoomState')}>
                 <DeviceCard
                   deviceName={'Device 1'}
                   energyUsage={0.1}
-                  handleStateToggle />
+                  handleStateToggle 
+                  
+                  />
+                </TouchableOpacity>
+                
                 <DeviceCard
                   deviceName={'Device 2'}
                   energyUsage={0.7}
@@ -135,6 +144,8 @@ const MainPage = ({username, imageUrl}) => {
         })}
       </TabView>
     </View>
+    </NavigationContainer>
+    
   );
 };
 
