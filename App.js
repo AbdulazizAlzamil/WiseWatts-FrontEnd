@@ -2,17 +2,14 @@ import { StyleSheet, View } from 'react-native';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, Layout, Text } from '@ui-kitten/components';
 
-import MainPage from './src/pages/MainPage';
+import MainPage from './pages/MainPage';
+import RoomState from './pages/RoomState';
 
 export default function App() {
   return (
-    <ApplicationProvider {...eva} theme={eva.light}>
-      <View style={styles.container}>
-        <MainPage 
-          username={'Abdulaziz'}
-        />
-      </View>
-    </ApplicationProvider>
+    <View style={styles.container}>
+      <RoomState />
+    </View>
   );
 }
 
