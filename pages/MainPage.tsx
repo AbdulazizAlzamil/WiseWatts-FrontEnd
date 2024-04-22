@@ -1,26 +1,35 @@
-import { useState } from 'react';
-import { Text, View, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, Alert } from 'react-native';
 import { Tab, TabView } from '@rneui/themed';
 import { Image } from 'expo-image';
 import { Button, Divider } from 'react-native-paper';
 import Prompt from 'react-native-prompt-crossplatform';
-import LinearGradient from 'react-native-linear-gradient';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
 
 import globalStyles from '../globalStyles';
 import DeviceCard from '../components/DeviceCard';
 
-const MainPage = ({username, imageUrl, navigation}) => {
+import db from '../db.json';
+
+const MainPage = ({ username }) => {
   const [index, setIndex] = useState(0);
-  const [rooms, setRooms] = useState(['All Devices', 'Kitchen']);
-  const [room, setRoom] = useState();
-  const [promptVisible, setPromptVisible] = useState(false);
+  const [rooms, setRooms] = useState(['All Devices']);
+
+  const getEnergyUsage = (deviceId) => {
+    const sockets = db.sockets.filter(socket => socket.device_id === deviceId);
+    return sockets.reduce((total, socket) => {
+      const consumption = db.hourly_consumption.filter(consumption => consumption.socket_id === socket.socket_id)
+        .reduce((acc, cur) => acc + cur.con_value, 0);
+      return total + consumption;
+    }, 0);
+  }
+
+  useEffect(() => {
+    const uniqueRooms = [...new Set(db.devices.map(device => device.room))];
+    setRooms(['All Devices', ...uniqueRooms]);
+
+  }, []);
 
   return (  
-    <NavigationContainer>
-      
     <View style={[StyleSheet.absoluteFill, { marginTop: 70, gap: 20 }]}>
       <View style={styles.headerContainer}>
         <Image
@@ -29,71 +38,8 @@ const MainPage = ({username, imageUrl, navigation}) => {
           contentFit="cover"
           transition={1000}
         />
-        <Text style={styles.headerText}>Hamza's House</Text>
-        <Image
-          style={styles.image}
-          source="https://picsum.photos/seed/696/3000/2000"
-          contentFit="cover"
-          transition={1000}
-        />
+        <Text style={styles.headerText}>{username}'s House</Text>
       </View>
-      <Divider style={{ backgroundColor: 'gray', height: 1 }} />
-      <Prompt
-        title="Add room"
-        placeholder="Enter the room name"
-        isVisible={promptVisible}
-        onChangeText={(text) => {
-          setRoom(text);
-        }}
-        onCancel={() => {
-          setPromptVisible(false);
-        }}
-        onSubmit={() => {
-          setPromptVisible(false);
-          setRooms([...rooms, room]);
-        }}
-      />
-
-      <View style={{flexDirection: 'row'}}>
-        <Button 
-          style={[styles.button, { marginLeft: 20, backgroundColor: '#ff6347' }]}
-          onPress={() => {
-            if (index !== 0) {
-              Alert.alert('Delete room', `Are you sure you want to delete the room "${rooms[index]}"?`, [
-                {
-                  text: 'No',
-                  style: 'cancel',
-                },
-                {
-                  text: 'Yes',
-                  onPress: () => {
-                    setRooms(rooms.filter((_, i) => i !== index));
-                    setIndex(rooms.length - 1);
-                  },
-                },
-              ]);
-            }
-          }}
-          mode='contained'
-          buttonColor={globalStyles.colors.primary}
-          textColor='#fff'
-        >
-          Delete current room
-        </Button>
-        
-        <Button 
-          style={styles.button}
-          onPress={() => {
-            setPromptVisible(true);
-          }}
-          mode='contained'
-          buttonColor={globalStyles.colors.primary}
-          textColor='#fff'
-        >
-          Add a room
-        </Button>
-      </View>
-      <Divider style={{ backgroundColor: 'gray', height: 1 }} />
 
       <Tab
         scrollable={rooms.length > 3}
@@ -102,8 +48,6 @@ const MainPage = ({username, imageUrl, navigation}) => {
         indicatorStyle={{
           backgroundColor: globalStyles.colors.primary,
           height: 3,
-          width: '30%', 
-          marginHorizontal: 46,
         }}
         variant="default"
       >
@@ -121,23 +65,18 @@ const MainPage = ({username, imageUrl, navigation}) => {
           return (
             <TabView.Item style={styles.tabViewItem} key={index}>
               <View style={{ gap: 10 }}>
-                <TouchableOpacity onPress={() => navigation.navigate('RoomState')}>
-                <DeviceCard
-                  deviceName={'Device 1'}
-                  energyUsage={0.1}
-                  handleStateToggle 
-                  
-                  />
-                </TouchableOpacity>
-                
-                <DeviceCard
-                  deviceName={'Device 2'}
-                  energyUsage={0.7}
-                  handleStateToggle />
-                <DeviceCard
-                  deviceName={'Device 3'}
-                  energyUsage={0.3}
-                  handleStateToggle />
+                {db.devices.filter(device => (index === 0) ? true : device.room === room).map((device, index) => {
+                  return (
+                    <DeviceCard
+                      key={device.device_id}
+                      deviceName={`Device #${device.device_id}`}
+                      energyUsage={getEnergyUsage(device.device_id)}
+                      handleStateToggle={() => {
+                        
+                      }}
+                    />
+                  );
+                })}
               </View>
             </TabView.Item>
           )
@@ -169,7 +108,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'flex-end',
     color: '#fff',
-    marginRight: 40,
     lineHeight: 40,
   },
   tabViewItem: {

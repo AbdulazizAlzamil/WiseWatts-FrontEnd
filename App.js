@@ -6,7 +6,9 @@ import RoomState from './pages/RoomState';
 export default function App() {
   return (
     <View style={styles.container}>
-      <RoomState />
+      <MainPage 
+        username={'Hamza'}
+      />
     </View>
   );
 }
