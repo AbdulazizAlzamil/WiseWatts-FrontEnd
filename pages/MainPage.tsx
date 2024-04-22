@@ -4,6 +4,7 @@ import { Tab, TabView } from '@rneui/themed';
 import { Image } from 'expo-image';
 import { Button, Divider } from 'react-native-paper';
 import Prompt from 'react-native-prompt-crossplatform';
+import LinearGradient from 'react-native-linear-gradient';
 
 import globalStyles from '../globalStyles';
 import DeviceCard from '../components/DeviceCard';
@@ -29,7 +30,7 @@ const MainPage = ({ username, imageUrl }) => {
 
   }, []);
 
-  return (
+  return (  
     <View style={[StyleSheet.absoluteFill, { marginTop: 70, gap: 20 }]}>
       <View style={styles.headerContainer}>
         <Image
@@ -48,6 +49,8 @@ const MainPage = ({ username, imageUrl }) => {
         indicatorStyle={{
           backgroundColor: globalStyles.colors.primary,
           height: 3,
+          width: 110, 
+          marginHorizontal: 46,
         }}
         variant="default"
       >
@@ -55,7 +58,7 @@ const MainPage = ({ username, imageUrl }) => {
           <Tab.Item
             key={index}
             title={category}
-            titleStyle={{ fontSize: 16 }}
+            titleStyle={{ fontSize: 16, color: '#fff' }}
           />
         ))}
       </Tab>
