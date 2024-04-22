@@ -5,7 +5,9 @@ import MainPage from './pages/MainPage';
 export default function App() {
   return (
     <View style={styles.container}>
-      <MainPage />
+      <MainPage 
+        username={'Hamza'}
+      />
     </View>
   );
 }

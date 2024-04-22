@@ -10,7 +10,7 @@ import DeviceCard from '../components/DeviceCard';
 
 import db from '../db.json';
 
-const MainPage = ({ username, imageUrl }) => {
+const MainPage = ({ username }) => {
   const [index, setIndex] = useState(0);
   const [rooms, setRooms] = useState(['All Devices']);
 
@@ -38,7 +38,7 @@ const MainPage = ({ username, imageUrl }) => {
           contentFit="cover"
           transition={1000}
         />
-        <Text style={styles.headerText}>Hamza's House</Text>
+        <Text style={styles.headerText}>{username}'s House</Text>
       </View>
 
       <Tab
