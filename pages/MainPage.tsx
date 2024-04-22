@@ -4,14 +4,13 @@ import { Tab, TabView } from '@rneui/themed';
 import { Image } from 'expo-image';
 import { Button, Divider } from 'react-native-paper';
 import Prompt from 'react-native-prompt-crossplatform';
-import LinearGradient from 'react-native-linear-gradient';
 
 import globalStyles from '../globalStyles';
 import DeviceCard from '../components/DeviceCard';
 
 import db from '../db.json';
 
-const MainPage = ({ username, imageUrl }) => {
+const MainPage = ({ username }) => {
   const [index, setIndex] = useState(0);
   const [rooms, setRooms] = useState(['All Devices']);
 
@@ -39,7 +38,7 @@ const MainPage = ({ username, imageUrl }) => {
           contentFit="cover"
           transition={1000}
         />
-        <Text style={styles.headerText}>Hamza's House</Text>
+        <Text style={styles.headerText}>{username}'s House</Text>
       </View>
 
       <Tab
@@ -49,8 +48,6 @@ const MainPage = ({ username, imageUrl }) => {
         indicatorStyle={{
           backgroundColor: globalStyles.colors.primary,
           height: 3,
-          width: 110, 
-          marginHorizontal: 46,
         }}
         variant="default"
       >
@@ -86,6 +83,8 @@ const MainPage = ({ username, imageUrl }) => {
         })}
       </TabView>
     </View>
+    </NavigationContainer>
+    
   );
 };
 
