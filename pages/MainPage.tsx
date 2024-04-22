@@ -48,8 +48,6 @@ const MainPage = ({ username, imageUrl }) => {
         indicatorStyle={{
           backgroundColor: globalStyles.colors.primary,
           height: 3,
-          // width: 110, 
-          // marginHorizontal: 46,
         }}
         variant="default"
       >
