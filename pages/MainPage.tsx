@@ -102,7 +102,7 @@ const MainPage = ({username, imageUrl, navigation}) => {
         indicatorStyle={{
           backgroundColor: globalStyles.colors.primary,
           height: 3,
-          width: '30%', 
+          width: 110, 
           marginHorizontal: 46,
         }}
         variant="default"
@@ -121,15 +121,10 @@ const MainPage = ({username, imageUrl, navigation}) => {
           return (
             <TabView.Item style={styles.tabViewItem} key={index}>
               <View style={{ gap: 10 }}>
-                <TouchableOpacity onPress={() => navigation.navigate('RoomState')}>
                 <DeviceCard
                   deviceName={'Device 1'}
                   energyUsage={0.1}
-                  handleStateToggle 
-                  
-                  />
-                </TouchableOpacity>
-                
+                  handleStateToggle />
                 <DeviceCard
                   deviceName={'Device 2'}
                   energyUsage={0.7}
@@ -144,7 +139,7 @@ const MainPage = ({username, imageUrl, navigation}) => {
         })}
       </TabView>
     </View>
-    </NavigationContainer>
+    
     
   );
 };
