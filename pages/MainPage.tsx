@@ -48,6 +48,8 @@ const MainPage = ({ username }) => {
         indicatorStyle={{
           backgroundColor: globalStyles.colors.primary,
           height: 3,
+          width: 110, 
+          marginHorizontal: 46,
         }}
         variant="default"
       >
@@ -65,25 +67,25 @@ const MainPage = ({ username }) => {
           return (
             <TabView.Item style={styles.tabViewItem} key={index}>
               <View style={{ gap: 10 }}>
-                {db.devices.filter(device => (index === 0) ? true : device.room === room).map((device, index) => {
-                  return (
-                    <DeviceCard
-                      key={device.device_id}
-                      deviceName={`Device #${device.device_id}`}
-                      energyUsage={getEnergyUsage(device.device_id)}
-                      handleStateToggle={() => {
-                        
-                      }}
-                    />
-                  );
-                })}
+                <DeviceCard
+                  deviceName={'Device 1'}
+                  energyUsage={0.1}
+                  handleStateToggle />
+                <DeviceCard
+                  deviceName={'Device 2'}
+                  energyUsage={0.7}
+                  handleStateToggle />
+                <DeviceCard
+                  deviceName={'Device 3'}
+                  energyUsage={0.3}
+                  handleStateToggle />
               </View>
             </TabView.Item>
           )
         })}
       </TabView>
     </View>
-    </NavigationContainer>
+    
     
   );
 };
