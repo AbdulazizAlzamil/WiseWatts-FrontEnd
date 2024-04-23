@@ -5,11 +5,11 @@ import RoomState from './pages/RoomState';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <MainPage 
-        username={'Hamza'}
-      />
-    </View>
+     <View style={styles.container}>
+    
+        <RoomState />
+     </View>
+    
   );
 }
 
