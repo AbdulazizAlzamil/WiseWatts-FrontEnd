@@ -39,7 +39,8 @@ const MainPage = ({ username }) => {
   const handleDeleteDevice = async (deviceId) => {
     try {
       await axios.delete(`http://192.168.1.31:3000/WisewattsDeviceController/DeleteDevice/${deviceId}`);
-      getDevices();
+      await getDevices();
+      await getRooms();
     } catch (err) {
       console.error(err);
     }
@@ -73,7 +74,7 @@ const MainPage = ({ username }) => {
     try {
       const response = await axios.get('http://192.168.1.31:3000/WisewattsDeviceController/FindAllDevices');
       const data = response.data;
-      const uniqueRooms = ['All Devices', ...new Set(data.map(device => device.room))];
+      const uniqueRooms = [...new Set(['All Devices', ...data.map(device => device.room)])];
       console.log(uniqueRooms);
       
       setRooms(uniqueRooms);
