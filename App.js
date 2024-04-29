@@ -1,23 +1,21 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from "react-native";
 
-import MainPage from './pages/MainPage';
-import RoomState from './pages/RoomState';
+import MainPage from "./pages/MainPage";
+import RoomState from "./pages/RoomState";
 
 export default function App() {
   return (
-     <View style={styles.container}>
-    
-        <RoomState />
-     </View>
-    
+    <View style={styles.container}>
+      <RoomState />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2E2E3E',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#2E2E3E",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
