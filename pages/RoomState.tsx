@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler';
+import { createStackNavigator } from '@react-navigation/stack';
 import { useState } from 'react';
 import { Text, View, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -5,8 +7,14 @@ import { MotiView } from 'moti';
 import { Easing } from 'react-native-reanimated';
 import { Tab, TabView } from '@rneui/themed';
 import { Image } from 'expo-image';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faClock } from '@fortawesome/free-solid-svg-icons/faClock'
 
 import globalStyles from '../globalStyles';
+import { Button } from 'react-native-elements';
+
+const Stack = createStackNavigator();
 
 
 const RoomState = () => {
@@ -24,14 +32,30 @@ return (
           contentFit="cover"
           transition={1000}
         /> */}
-        <Text>{'<'}</Text>
-        <Text style={styles.headerText}>Bitch House</Text>
+        <Button
+            type='clear'
+            icon={
+              <Icon
+                 
+                name="chevron-left"
+                size={21}
+                color="#ABE505"
+                
+              />
+            }
+            
+            
+        />
+        <Text
+          style={[styles.headerText]}
+        >Living Room</Text>
         <Image
           style={[styles.image, {  width: 40, height: 40 }]}
           source={require("../assets/imgs/logo.png")}
           contentFit="cover"
           transition={1000}
         />
+        
       </View>
 
         <Tab
@@ -57,12 +81,61 @@ return (
         
         <TabView value={index} onChange={setIndex} animationType="spring">
 
+          
+
             {sockets.map((room, index) => {
                return (
                 <TabView.Item style={styles.tabViewItem} key={index}>
                   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
 
-                    <View style={[styles.circle, styles.center, {zIndex:5}]}/>
+                  <View style={[StyleSheet.absoluteFill, {marginTop: 70, gap: 20 }]}>
+                    <View style={[{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 40}]}>
+
+                    
+
+                      <Button
+                        type='clear'
+                        icon={
+                          <Icon   
+                            name="bullseye"
+                            size={35}
+                            color="#ABE505"   
+                          />
+                        }    
+                      />
+
+                      <Button
+                        type='clear'
+                        icon={
+                          <FontAwesomeIcon   
+                            icon={faClock}
+                            size={35}
+                            color="#ABE505"   
+                          />
+                        }    
+                      />
+                  </View>
+                  </View>
+                    
+
+                    <View style={[styles.circle, styles.center, {zIndex:5}]}>
+                      
+                      <Button
+                        
+                        type='clear'
+                          icon={
+                            <Icon    
+                              name="power-off"
+                              size={30}
+                              color="#ABE505"
+                                  
+                            />
+                              }
+                              
+                              
+                          />
+
+                      </View>
                     <View style ={[styles.circle, styles.center, ]}>
                     {[...Array(3).keys()].map((index)  => {
                         return(
@@ -83,6 +156,7 @@ return (
                             />
                         ) 
                     })}
+                    
                     </View>
                 </View>
 

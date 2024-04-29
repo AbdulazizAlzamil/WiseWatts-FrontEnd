@@ -30,12 +30,6 @@ const MainPage = ({username, imageUrl, navigation}) => {
           transition={1000}
         />
         <Text style={styles.headerText}>Hamza's House</Text>
-        <Image
-          style={styles.image}
-          source="https://picsum.photos/seed/696/3000/2000"
-          contentFit="cover"
-          transition={1000}
-        />
       </View>
       <Divider style={{ backgroundColor: 'gray', height: 1 }} />
       <Prompt
