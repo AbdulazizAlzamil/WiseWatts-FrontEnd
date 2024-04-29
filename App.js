@@ -1,14 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import * as eva from '@eva-design/eva';
+import { ApplicationProvider, Layout, Text } from '@ui-kitten/components';
 
-import MainPage from './pages/MainPage';
+import MainPage from './src/pages/MainPage';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <MainPage 
-        username={'Hamza'}
-      />
-    </View>
+    <ApplicationProvider {...eva} theme={eva.light}>
+      <View style={styles.container}>
+        <MainPage 
+          username={'Abdulaziz'}
+        />
+      </View>
+    </ApplicationProvider>
   );
 }
 
