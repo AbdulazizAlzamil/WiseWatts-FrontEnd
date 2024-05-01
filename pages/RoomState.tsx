@@ -1,5 +1,3 @@
-import 'react-native-gesture-handler';
-import { createStackNavigator } from '@react-navigation/stack';
 import { useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -7,9 +5,6 @@ import { MotiView } from 'moti';
 import { Easing } from 'react-native-reanimated';
 import { Tab, TabView } from '@rneui/themed';
 import { Image } from 'expo-image';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faClock } from '@fortawesome/free-solid-svg-icons/faClock'
 
 import globalStyles from '../globalStyles';
 
@@ -28,7 +23,6 @@ const RoomState = () => {
           contentFit="cover"
           transition={1000}
         />
-        
       </View>
       <Tab
         scrollable={sockets.length > 3}
