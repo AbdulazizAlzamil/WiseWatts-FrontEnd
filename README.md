@@ -1,2 +1,2 @@
 # WiseWatts-FrontEnd
-This is the implementation for the Fron-End of WiseWatts
+This is the implementation for the Front-End of WiseWatts
