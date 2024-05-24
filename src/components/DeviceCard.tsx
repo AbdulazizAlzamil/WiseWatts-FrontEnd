@@ -5,9 +5,9 @@ import { Card } from '@rneui/themed';
 import { Button, Divider } from 'react-native-paper';
 import { Image } from 'expo-image';
 
-import globalStyles from '../../globalStyles';
+import globalStyles from '../../constants/globalStyles';
 
-const DeviceCard = ({device, energyUsage, onStateToggle, onDeleteDevice}) => {
+const DeviceCard = ({device, onStateToggle, onDeleteDevice}) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
@@ -41,7 +41,7 @@ const DeviceCard = ({device, energyUsage, onStateToggle, onDeleteDevice}) => {
       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
         <Image source={require('../../assets/imgs/electricity-logo.png')} style={{ width: 35, height: 35 }} />
         <View style={{marginRight: 'auto'}}>
-          <Text style={{color: globalStyles.colors.secondary, fontSize: 20, marginLeft: 10, fontWeight: 'bold'}}>{energyUsage.toFixed(1)}kW</Text>
+          {/* <Text style={{color: globalStyles.colors.secondary, fontSize: 20, marginLeft: 10, fontWeight: 'bold'}}>{energyUsage.toFixed(1)}kW</Text> */}
           <Text style={{color: globalStyles.colors.secondary, fontSize: 12, marginLeft: 10}}>Energy Usage</Text>
         </View>
         <Button 
