@@ -1,23 +1,29 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import * as eva from '@eva-design/eva';
+import { ApplicationProvider, Layout, Text } from '@ui-kitten/components';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import MainPage from './pages/MainPage';
-import RoomState from './pages/RoomState';
+import MainPage from './src/pages/MainPage';
+import RoomState from './src/pages/RoomState';
+
+const Stack = createNativeStackNavigator();
+
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <MainPage 
-        username={'Hamza'}
-      />
-    </View>
+    <ApplicationProvider {...eva} theme={eva.light}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          {/* 
+            <MainPage 
+              username={'Abdulaziz'}
+            />
+          </View> */}
+          <Stack.Screen name="Main Page" component={MainPage} />
+          <Stack.Screen name="Room State" component={RoomState} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ApplicationProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#2E2E3E',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
