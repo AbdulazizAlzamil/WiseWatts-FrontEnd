@@ -33,22 +33,23 @@ const MainPage = ({ navigation }) => {
   // }
 
   const handleStateToggle = async (deviceId) => {
-    await axios.put(`http://192.168.1.31:3000/WisewattsDeviceController/ToggleDevice/${deviceId}`);
+    await axios.put(`http://192.168.1.24:3000/WisewattsDeviceController/ToggleDevice/${deviceId}`);
   }
 
   const handleDeleteDevice = async (deviceId) => {
     try {
-      await axios.delete(`http://192.168.1.31:3000/WisewattsDeviceController/DeleteDevice/${deviceId}`);
+      await axios.delete(`http://192.168.1.24:3000/WisewattsDeviceController/DeleteDevice/${deviceId}`);
       await getDevices();
       await getRooms();
     } catch (err) {
+      console.log("handleDeleteDevice error");
       console.error(err);
     }
   }
 
   const addDevice = async (roomName) => {
     try {
-      await axios.post('http://192.168.1.31:3000/WisewattsDeviceController/CreateDevice', {
+      await axios.post('http://192.168.1.24:3000/WisewattsDeviceController/CreateDevice', {
         state: false,
         serial_number: Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111,
         room: roomName
@@ -56,52 +57,58 @@ const MainPage = ({ navigation }) => {
       await getDevices();
       await getRooms();
     } catch (err) {
+      console.log("addDevice error");
       console.log(err);
     }
   }
 
   const getDevices = async () => {
     try {
-      const response = await axios.get('http://192.168.1.31:3000/WisewattsDeviceController/FindAllDevices');
+      const response = await axios.get('http://192.168.1.24:3000/WisewattsDeviceController/FindAllDevices');
       const data = response.data;
       setDevices(data);
     } catch (err) {
+      console.log("getDevices error");
       console.error(err);
     }
   };
 
   const getRooms = async () => {
     try {
-      const response = await axios.get('http://192.168.1.31:3000/WisewattsDeviceController/FindAllDevices');
+      const response = await axios.get('http://192.168.1.24:3000/WisewattsDeviceController/FindAllDevices');
       const data = response.data;
       const uniqueRooms = [...new Set(['All Devices', ...data.map(device => device.room)])];
       console.log(uniqueRooms);
       
+      
       setRooms(uniqueRooms);
+
     } catch (err) {
+      console.log("getRoom error");
       console.error(err);
     }
   }
 
   const getSockets = async () => {
     try {
-      const response = await axios.get('http://192.168.1.31:3000/SocketController/FindAllSockets');
+      const response = await axios.get('http://192.168.1.24:3000/SocketController/FindAllSockets');
       const data = response.data;
       setSockets(data);
     } catch(err) {
+      console.log("getSockets error");
       console.log(err);
     }
   }
 
-  const getHourlyConsumptions = async () => {
-    try {
-      const response = await axios.get('http://192.168.1.31:3000/HourlyConsumptionController/FindAllCons');
-      const data = response.data;
-      setHourlyConsumptions(data);
-    } catch(err) {
-      console.log(err);
-    }
-  }
+  // const getHourlyConsumptions = async () => {
+  //   try {
+  //     const response = await axios.get('http://192.168.1.24:3000/HourlyConsumptionController/FindAllCons');
+  //     const data = response.data;
+  //     setHourlyConsumptions(data);
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // }
   
   useEffect(() => {
     getDevices();

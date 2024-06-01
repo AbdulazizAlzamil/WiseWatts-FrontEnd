@@ -20,7 +20,7 @@ const RoomState = ( { route }) => {
 
   const handleToggle = async (socket) => {
     try {
-      await axios.put(`http://192.168.1.31:3000/SocketController/ToggleSocket/${socket.socket_id}`);
+      await axios.put(`http://192.168.1.24:3000/SocketController/ToggleSocket/${socket.socket_id}`);
       setSockets(prevState => {
           return prevState.map(s => {
             if (s.socket_id === socket.socket_id) {
@@ -33,11 +33,12 @@ const RoomState = ( { route }) => {
           });
       });
 
-      await axios.post(`http://192.168.1.31:3000/CommandController/CreateCommand`, {
+      await axios.post(`http://192.168.1.24:3000/CommandController/CreateCommand`, {
         socket_id: socket.socket_id,
         device_id: socket.device_id,
       })
     } catch(err) {
+      console.log("handleToggle");
       console.log(err);
     }
   };
@@ -77,7 +78,7 @@ const RoomState = ( { route }) => {
   useEffect(() => {
     const fetchSockets = async () => {
       try {
-        const response = await axios.get(`http://192.168.1.31:3000/SocketController/FindSocketsByDevice/${deviceId}`);
+        const response = await axios.get(`http://192.168.1.24:3000/SocketController/FindSocketsByDevice/${deviceId}`);
         const data = response.data;
         setSockets(data);
         setRoutes([
@@ -86,6 +87,7 @@ const RoomState = ( { route }) => {
           { key: 'third', title: data[2]?.socket_name || 'Socket 3' },
         ])
       } catch(err) {
+        console.log("fetchSockets");
         console.log(err);
       }
     }
