@@ -7,6 +7,7 @@ import { Image } from 'expo-image';
 
 import globalStyles from '../../constants/globalStyles';
 
+// modified parameters to include alarmTime
 const DeviceCard = ({device, onStateToggle, onDeleteDevice}) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);

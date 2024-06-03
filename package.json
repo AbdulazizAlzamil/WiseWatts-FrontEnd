@@ -11,6 +11,7 @@
   "dependencies": {
     "@eva-design/eva": "^2.2.0",
     "@expo/vector-icons": "^14.0.0",
+    "@react-native-community/datetimepicker": "^8.0.1",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
     "@rneui/base": "^4.0.0-rc.7",
@@ -36,6 +37,7 @@
     "react-native-pager-view": "6.2.3",
     "react-native-paper": "^5.12.3",
     "react-native-prompt-crossplatform": "^1.6.1",
+    "react-native-push-notification": "^8.1.1",
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
     "react-native-svg": "^15.2.0",
