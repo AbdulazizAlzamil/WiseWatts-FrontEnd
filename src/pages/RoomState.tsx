@@ -8,7 +8,7 @@ import ToggleButton from '../components/ToggleButton';
 
 const initialLayout = { width: 320 };
 
-const RoomState = ( { route }) => {
+const RoomState = ({ route }) => {
   const [sockets, setSockets] = useState([]);
   const { deviceId } = route.params;
   const [index, setIndex] = useState(0);
@@ -20,20 +20,7 @@ const RoomState = ( { route }) => {
 
   const handleToggle = async (socket) => {
     try {
-      await axios.put(`http://192.168.1.24:3000/SocketController/ToggleSocket/${socket.socket_id}`);
-      setSockets(prevState => {
-          return prevState.map(s => {
-            if (s.socket_id === socket.socket_id) {
-              return {
-                ...s,
-                state: !s.state
-              }
-            }
-            return s;
-          });
-      });
-
-      await axios.post(`http://192.168.1.24:3000/CommandController/CreateCommand`, {
+      await axios.post(`http://192.168.1.31:3000/CommandController/CreateCommand`, {
         socket_id: socket.socket_id,
         device_id: socket.device_id,
       })
