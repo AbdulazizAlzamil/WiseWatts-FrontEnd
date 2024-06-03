@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
       marginTop: 45,
       fontSize: 25,
       color: globalStyles.colors.secondary,
-      //fontFamily: 'Poppins-Bold', // Ensure this matches the name of the font file
+      //fontFamily: 'Poppins-ExtraLight', // Ensure this matches the name of the font file
       textAlign: 'left',
       marginHorizontal: 25,
       marginBottom: 30, // Adjust margin to push down the form
