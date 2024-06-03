@@ -25,6 +25,7 @@ const RoomState = ({ route }) => {
         device_id: socket.device_id,
       })
     } catch(err) {
+      console.log("handleToggle");
       console.log(err);
     }
   };
@@ -64,7 +65,7 @@ const RoomState = ({ route }) => {
   useEffect(() => {
     const fetchSockets = async () => {
       try {
-        const response = await axios.get(`http://192.168.1.31:3000/SocketController/FindSocketsByDevice/${deviceId}`);
+        const response = await axios.get(`http://192.168.1.24:3000/SocketController/FindSocketsByDevice/${deviceId}`);
         const data = response.data;
         setSockets(data);
         setRoutes([
@@ -73,6 +74,7 @@ const RoomState = ({ route }) => {
           { key: 'third', title: data[2]?.socket_name || 'Socket 3' },
         ])
       } catch(err) {
+        console.log("fetchSockets");
         console.log(err);
       }
     }
