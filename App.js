@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import MainPage from './src/pages/MainPage';
 import RoomState from './src/pages/RoomState';
+import Scheduling from './src/pages/Scheduling';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ export default function App() {
               username={'Abdulaziz'}
             />
           </View> */}
+          <Stack.Screen name="Scheduling" component={Scheduling} />
           <Stack.Screen name="Main Page" component={MainPage} />
           <Stack.Screen name="Room State" component={RoomState} />
         </Stack.Navigator>
