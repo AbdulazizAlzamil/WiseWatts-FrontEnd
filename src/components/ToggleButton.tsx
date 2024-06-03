@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import globalStyles from '../../constants/globalStyles';
 
 const ToggleButton = ({ socket, onToggle }) => {
+  const [state, setState] = useState(socket.state);
+
   return (
-    <TouchableOpacity style={[styles.circleButton, {shadowColor: socket.state ? '#00ff00' : 'transparent'}]} onPress={() => onToggle(socket)}>
+    <TouchableOpacity style={[styles.circleButton, {shadowColor: state ? '#00ff00' : 'transparent'}]} onPress={() => {
+      onToggle(socket);
+      setState(prev => !prev);
+    }}>
       <Icon style={styles.icon}
         name={'power'}
         size={50}
-        color={socket.state ? globalStyles.colors.secondary : '#1D1D2A'}
+        color={state ? globalStyles.colors.secondary : '#1D1D2A'}
       />
     </TouchableOpacity>
   );
