@@ -20,12 +20,13 @@ export default function App() {
     <ApplicationProvider {...eva} theme={eva.light}>
       <NavigationContainer>
         <Stack.Navigator>
+        
           {/* 
             <MainPage 
               username={'Abdulaziz'}
             />
           </View> */}
-          <Stack.Screen name="Login" component={Login} />
+          {/* <Stack.Screen name="Login" component={Login} /> */}
           <Stack.Screen name="Welcome" component={Welcome} />
           <Stack.Screen name="Signup" component={Signup} />
           <Stack.Screen name="Scheduling" component={Scheduling} />

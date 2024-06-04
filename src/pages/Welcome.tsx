@@ -1,16 +1,20 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Platform } from 'react-native';
+import { useFonts } from 'expo-font';
 
 import globalStyles from "../../constants/globalStyles";
 
 const Welcome = () => {
+  const [fontsLoaded] = useFonts({
+    'Poppins-ExtraLight': require('../../assets/fonts/Poppins-ExtraLight.ttf'),
+  });
   return (
     <View style={styles.container}>
-      {/* <Image
-        source={require('./assets/imgs/logo.png')}
+      <Image
+        source={require('../../assets/imgs/logo.png')}
         style={styles.image}
-      /> */}
-      <Text style={styles.welcomeText}>Welcome to WiseWatts!</Text>
+      />
+      <Text  style={styles.welcomeText}>Welcome to WiseWatts!</Text>
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Next  &gt;</Text>
       </TouchableOpacity>
@@ -33,6 +37,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   welcomeText: {
+    //fontFamily: 'Poppins-ExtraLight',
+    
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
