@@ -10,6 +10,7 @@ import RoomState from './src/pages/RoomState';
 import Scheduling from './src/pages/Scheduling';
 import Signup from './src/pages/Signup';
 import Welcome from './src/pages/Welcome';
+import Login from './src/pages/Login';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ export default function App() {
               username={'Abdulaziz'}
             />
           </View> */}
+          <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Welcome" component={Welcome} />
           <Stack.Screen name="Signup" component={Signup} />
           <Stack.Screen name="Scheduling" component={Scheduling} />
