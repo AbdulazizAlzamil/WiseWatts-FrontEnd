@@ -24,12 +24,12 @@ const MainPage = ({ navigation }) => {
   const [hourlyConsumption, setHourlyConsumptions] = useState([]);
 
   const handleStateToggle = async (deviceId) => {
-    await axios.put(`http://192.168.1.31:3000/WisewattsDeviceController/ToggleDevice/${deviceId}`);
+    await axios.put(`http://192.168.1.24:3000/WisewattsDeviceController/ToggleDevice/${deviceId}`);
   }
 
   const handleDeleteDevice = async (deviceId) => {
     try {
-      await axios.delete(`http://192.168.1.31:3000/WisewattsDeviceController/DeleteDevice/${deviceId}`);
+      await axios.delete(`http://192.168.1.24:3000/WisewattsDeviceController/DeleteDevice/${deviceId}`);
       await getDevices();
       await getRooms();
     } catch (err) {
@@ -40,7 +40,7 @@ const MainPage = ({ navigation }) => {
 
   const addDevice = async (roomName) => {
     try {
-      await axios.post('http://192.168.1.31:3000/WisewattsDeviceController/CreateDevice', {
+      await axios.post('http://192.168.1.24:3000/WisewattsDeviceController/CreateDevice', {
         state: false,
         serial_number: Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111,
         room: roomName
@@ -55,7 +55,7 @@ const MainPage = ({ navigation }) => {
 
   const getDevices = async () => {
     try {
-      const response = await axios.get('http://192.168.1.31:3000/WisewattsDeviceController/FindAllDevices');
+      const response = await axios.get('http://192.168.1.24:3000/WisewattsDeviceController/FindAllDevices');
       const data = response.data;
       setDevices(data);
     } catch (err) {
@@ -66,7 +66,7 @@ const MainPage = ({ navigation }) => {
 
   const getRooms = async () => {
     try {
-      const response = await axios.get('http://192.168.1.31:3000/WisewattsDeviceController/FindAllDevices');
+      const response = await axios.get('http://192.168.1.24:3000/WisewattsDeviceController/FindAllDevices');
       const data = response.data;
       const uniqueRooms = [...new Set(['All Devices', ...data.map(device => device.room)])];
       console.log(uniqueRooms);
@@ -82,7 +82,7 @@ const MainPage = ({ navigation }) => {
 
   const getSockets = async () => {
     try {
-      const response = await axios.get('http://192.168.1.31:3000/SocketController/FindAllSockets');
+      const response = await axios.get('http://192.168.1.24:3000/SocketController/FindAllSockets');
       const data = response.data;
       setSockets(data);
     } catch(err) {

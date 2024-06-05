@@ -10,13 +10,26 @@ const LoginSchema = Yup.object().shape({
   password: Yup.string().required('Password is required'),
 });
 
-const Login = () => {
+const Login = ({navigation}) => {
+
+  const handleLogin = (values) => {
+    // Dummy login values until you idiots connect the API....<3
+    if (values.email === 'user@example.com' && values.password === 'password') {
+      // Navigate to the Main Page if credentials are correct
+      navigation.navigate('Main Page');
+    } else {
+      console.log('Invalid email or password');
+      
+    }
+  };
+
   return (
     <Formik
       initialValues={{ email: '', password: '' }}
       validationSchema={LoginSchema}
       onSubmit={(values) => {
         // Handle login logic here
+        handleLogin(values);
         console.log('Login form submitted with values:', values);
       }}
     >
@@ -30,7 +43,7 @@ const Login = () => {
             onBlur={handleBlur('email')}
             value={values.email}
           />
-          {errors.email && <Text>{errors.email}</Text>}
+          {errors.email && <Text style={styles.error}>{errors.email}</Text>}
 
           <TextInput
             style={styles.input}
@@ -45,6 +58,13 @@ const Login = () => {
           <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
               <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
+
+            <View style={styles.signupText}>
+            <Text style={styles.signup}>New user? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+              <Text style={[styles.signup, styles.signupLink]}>Create a new account</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
     </Formik>
@@ -101,6 +121,18 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: 16,
         fontWeight: 'bold',
+      },
+      signupText: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 20,
+      },
+      signup: {
+        color: 'white',
+      },
+      signupLink: {
+        color: globalStyles.colors.secondary,
+        textDecorationLine: 'underline',
       },
 
 

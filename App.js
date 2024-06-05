@@ -26,8 +26,8 @@ export default function App() {
               username={'Abdulaziz'}
             />
           </View> */}
-          {/* <Stack.Screen name="Login" component={Login} /> */}
           <Stack.Screen name="Welcome" component={Welcome} />
+          <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Signup" component={Signup} />
           <Stack.Screen name="Scheduling" component={Scheduling} />
           <Stack.Screen name="Main Page" component={MainPage} />

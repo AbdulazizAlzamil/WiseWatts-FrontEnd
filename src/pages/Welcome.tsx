@@ -4,10 +4,10 @@ import { useFonts } from 'expo-font';
 
 import globalStyles from "../../constants/globalStyles";
 
-const Welcome = () => {
-  const [fontsLoaded] = useFonts({
-    'Poppins-ExtraLight': require('../../assets/fonts/Poppins-ExtraLight.ttf'),
-  });
+const Welcome = ({navigation}) => {
+  // const [fontsLoaded] = useFonts({
+  //   'Poppins-ExtraLight': require('../../assets/fonts/Poppins-ExtraLight.ttf'),
+  // });
   return (
     <View style={styles.container}>
       <Image
@@ -15,7 +15,7 @@ const Welcome = () => {
         style={styles.image}
       />
       <Text  style={styles.welcomeText}>Welcome to WiseWatts!</Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
         <Text style={styles.buttonText}>Next  &gt;</Text>
       </TouchableOpacity>
     </View>
