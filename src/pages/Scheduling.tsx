@@ -1,112 +1,185 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, Modal, FlatList, TouchableOpacity, Alert } from 'react-native';
+import axios from 'axios';
+import { View, Text, StyleSheet, Button, Modal, FlatList, TouchableOpacity, Alert, Switch } from 'react-native';
+import { Button as RNPButton, Divider } from 'react-native-paper';
+import { Card } from '@rneui/themed';
 import DateTimePicker from '@react-native-community/datetimepicker';
+
 import globalStyles from "../../constants/globalStyles";
 
-const Scheduling = () => {
-    const [time, setTime] = useState(new Date());
-    const [show, setShow] = useState(false);
-    const [alarms, setAlarms] = useState<Date[]>([]);
-    const [modalVisible, setModalVisible] = useState(false);
+const Scheduling = ({ route }) => {
+	const { socketId } = route.params;
+	const [schedule, setSchedule] = useState();
+	const [time, setTime] = useState(new Date());
+	const [show, setShow] = useState(false);
+	const [schedules, setSchedules] = useState([]);
+	const [modalVisible, setModalVisible] = useState(false);
+	// const [isEnabled, setIsEnabled] = useState(false);
 
-    const onChange = (event, selectedTime) => {
-        const currentTime = selectedTime || time;
-        setShow(false);
-        setTime(currentTime);
-    };
+	// const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
-    const showTimepicker = () => {
-        setShow(true);
-    };
+	const onStateToggle = async (scheduleId) => {
+		console.log(scheduleId);
+		
+		setSchedules(schedules.map((schedule) => {
+			if(schedule.schedule_id === scheduleId) {
+				schedule.state = !schedule.state;
+			}
+			return schedule;
+		}));
 
-    const addAlarm = () => {
-        setAlarms([...alarms, time]);
-        setModalVisible(false);
-    };
+		await axios.put(`http://192.168.1.31:3000/ScheduleController/ToggleSchedule`, {
+			schedule_id: scheduleId,
+		});
+	}
 
-    const deleteAlarm = (index: number) => {
-        const newAlarms = alarms.filter((_, i) => i !== index);
-        setAlarms(newAlarms);
-    };
+	const onChange = (event, selectedTime) => {
+			const currentTime = selectedTime || time;
+			setShow(false);
+			setTime(currentTime);
+			setSchedule({
+				start_date: currentTime,
+				end_date: currentTime,
+				socket_id: socketId,
+				state: false,
+			});
+	};
 
-    const calculateTimeLeft = (alarmTime) => {
-        const now = new Date();
-        const timeDifference = alarmTime.getTime() - now.getTime();
-        if (timeDifference <= 0) return 'Alarm time has passed';
+	const showTimepicker = () => {
+			setShow(true);
+	};
 
-        const hours = Math.floor(timeDifference / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-        return `${hours}h ${minutes}m left`;
-    };
+	const addSchedule = async () => {
+			if(!time) return Alert.alert('Error', 'Please select a time for the schedule.');
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            alarms.forEach((alarm) => {
-                const timeLeft = calculateTimeLeft(alarm);
-                if (timeLeft === 'Alarm time has passed') {
-                    Alert.alert("Alarm Notification", `Your alarm set for ${alarm.toLocaleTimeString()} has passed.`);
-                    deleteAlarm(alarms.indexOf(alarm));
-                }
-            });
-        }, 60000); // Check every minute
+			setSchedules([...schedules, {...schedule, start_date: time.toLocaleTimeString(), end_date: time.toLocaleTimeString()}]);
+			setModalVisible(false);
 
-        return () => clearInterval(interval);
-    }, [alarms]);
+			await axios.post(`http://192.168.1.31:3000/ScheduleController/CreateSchedule/`, schedule);
+			getSchedules();
+	};
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>Set Alarm</Text>
-            </View>
-            <View style={styles.scene}>
-                <Button title="Add Alarm" onPress={() => setModalVisible(true)} />
-                <FlatList
-                    data={alarms}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item, index }) => (
-                        <View style={styles.alarmItem}>
-                            <Text style={styles.text}>{item.toLocaleTimeString()}</Text>
-                            <Text style={styles.text}>{calculateTimeLeft(item)}</Text>
-                            <TouchableOpacity
-                                style={styles.deleteButton}
-                                onPress={() => deleteAlarm(index)}
-                            >
-                                <Text style={styles.deleteButtonText}>Delete</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                />
-            </View>
+	const deleteSchedule = async (scheduleId: number) => {
+			const newSchedules = schedules.filter(schedule => schedule.schedule_id !== scheduleId);
+			setSchedules(newSchedules);
+			await axios.delete(`http://192.168.1.31:3000/ScheduleController/DeleteSchedule/${scheduleId}`);
+	};
 
-            {modalVisible && (
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => setModalVisible(!modalVisible)}
-                >
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            <Text style={styles.modalText}>Select Time</Text>
-                            <Button onPress={showTimepicker} title="Show time picker!" />
-                            {show && (
-                                <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={time}
-                                    mode="time"
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={onChange}
-                                />
-                            )}
-                            <Button title="Add Alarm" onPress={addAlarm} />
-                            <Button title="Cancel" onPress={() => setModalVisible(false)} />
-                        </View>
-                    </View>
-                </Modal>
-            )}
-        </View>
-    );
+	const getSchedules = async () => {
+		const response = await axios.get(`http://192.168.1.31:3000/ScheduleController/FindScheduleBySocket/${socketId}`);
+		const schedules = response.data.map(schedule => {
+			
+			const date = new Date(schedule.start_date);
+			date.setHours(date.getHours() - 3);
+			return {
+				...schedule,
+				start_date: date.toLocaleTimeString(),
+				end_date: date.toLocaleTimeString(),
+			};
+		});
+
+		setSchedules(schedules);
+	}
+
+	useEffect(() => {
+		
+		getSchedules();
+	}, []);
+
+	return (
+		<View style={styles.container}>
+			<View style={styles.header}>
+				<Text style={styles.headerTitle}>Schedules</Text>
+			</View>
+			<View style={styles.scene}>
+					<RNPButton
+						labelStyle={{ color: globalStyles.colors.background }}
+						style={styles.button}
+						icon="plus"
+						mode="contained"
+						onPress={() => setModalVisible(true)}
+						children="Add Schedule"
+					/>
+					<FlatList
+							data={schedules}
+							keyExtractor={(_, index) => index.toString()}
+							renderItem={({ item: schedule, index }) => (
+									<View style={styles.scheduleItem}>
+										<Card containerStyle={styles.card}>
+											<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 15}}>
+												<Card.FeaturedSubtitle style={{alignSelf: 'flex-start', color: '#fff', fontSize: 26}}>{`${schedule.start_date}`}</Card.FeaturedSubtitle>
+												<Switch
+													style={{alignSelf: 'flex-end', marginTop: -25, transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }]}}
+													trackColor={{ false: "#2E2E3E", true: "gray"}}
+													thumbColor={schedule.state ? globalStyles.colors.secondary : "#848184"}
+													ios_backgroundColor="#3e3e3e"
+													// onValueChange={toggleSwitch}
+													value={schedule.state}
+													onChange={() => onStateToggle(schedule.schedule_id)}
+												/>
+											</View>
+											<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+												<RNPButton 
+													onPress={() => deleteSchedule(schedule.schedule_id)}
+													contentStyle={{backgroundColor: globalStyles.colors.red}}
+													labelStyle={{color: '#fff'}}
+												>
+													Delete Schedule
+												</RNPButton>
+											</View>
+										</Card>
+									</View>
+							)}
+					/>
+			</View> 
+
+			{modalVisible && (
+				<Modal
+					animationType="slide"
+					transparent={true}
+					visible={modalVisible}
+					onRequestClose={() => setModalVisible(!modalVisible)}
+				>
+					<View style={styles.centeredView}>
+							<View style={styles.modalView}>
+								<Text style={styles.modalText}>Select Time</Text>
+								<RNPButton
+									labelStyle={{ color: globalStyles.colors.background }}
+									style={styles.button}
+									mode="contained"
+									onPress={showTimepicker}
+									children="Show time picker"
+								/>
+								{show && (
+									<DateTimePicker
+										testID="dateTimePicker"
+										value={time}
+										mode="time"
+										is24Hour={true}
+										display="default"
+										onChange={onChange}
+									/>
+								)}
+								<RNPButton
+									labelStyle={{ color: globalStyles.colors.background }}
+									style={styles.button}
+									mode="contained"
+									onPress={addSchedule}
+									children="Add Schedule"
+								/>
+								<RNPButton
+									labelStyle={{ color: globalStyles.colors.background }}
+									style={{...styles.button, backgroundColor: 'gray'}}
+									mode="contained"
+									onPress={() => setModalVisible(false)}
+									children="Cancel"
+								/>
+							</View>
+						</View>
+					</Modal>
+			)}
+		</View>
+	);
 };
 
 export default Scheduling;
@@ -124,13 +197,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: 16,
-        paddingTop: 30,
         height: 70,
+				marginBottom: 20,
         backgroundColor: globalStyles.colors.background,
     },
     headerTitle: {
-        fontSize: 24,
+        fontSize: 30,
         color: '#ffff',
         fontWeight: 'bold',
         alignItems: 'center',
@@ -138,7 +210,7 @@ const styles = StyleSheet.create({
     scene: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
     },
     centeredView: {
         flex: 1,
@@ -147,11 +219,13 @@ const styles = StyleSheet.create({
         marginTop: 22,
     },
     modalView: {
+				gap: 10,
         margin: 20,
         backgroundColor: 'white',
         borderRadius: 20,
         width: '90%',
-        padding: 35,
+        paddingHorizontal: 35,
+				paddingVertical: 20,
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
@@ -167,14 +241,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'black',
         fontWeight: 'bold',
+				fontSize: 24,
     },
-    alarmItem: {
+    scheduleItem: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: 'white',
     },
     deleteButton: {
         backgroundColor: 'red',
@@ -185,4 +258,20 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
+    button: {
+        width: '90%',
+        alignSelf: 'center',
+        marginTop: 'auto',
+        backgroundColor: globalStyles.colors.primary,
+        // position: 'absolute',
+        // bottom: 50,
+    },
+		card: {
+			width: '90%',
+			backgroundColor: '#3f4055',
+			borderWidth: 0,
+			borderRadius: 20,
+			paddingVertical: 20,
+			paddingHorizontal: 25,
+		},
 });

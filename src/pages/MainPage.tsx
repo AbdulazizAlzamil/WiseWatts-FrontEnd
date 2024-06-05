@@ -68,9 +68,9 @@ const MainPage = ({ navigation }) => {
     try {
       const response = await axios.get('http://192.168.1.31:3000/WisewattsDeviceController/FindAllDevices');
       const data = response.data;
+      
       const uniqueRooms = [...new Set(['All Devices', ...data.map(device => device.room)])];
       console.log(uniqueRooms);
-      
       
       setRooms(uniqueRooms);
 
@@ -139,6 +139,7 @@ const MainPage = ({ navigation }) => {
                       return (
                         <TouchableOpacity
                           onPress={() => navigation.navigate('Room State', { deviceId: device.device_id })}
+                          key={index}
                         >
                           <DeviceCard
                             key={device.device_id}

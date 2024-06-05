@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 import globalStyles from "../../constants/globalStyles";
@@ -8,9 +8,10 @@ import ToggleButton from '../components/ToggleButton';
 
 const initialLayout = { width: 320 };
 
-const RoomState = ({ route }) => {
+const RoomState = ({ route, navigation }) => {
   const [sockets, setSockets] = useState([]);
   const { deviceId } = route.params;
+  // const deviceId = 69;
   const [index, setIndex] = useState(0);
   const [routes, setRoutes] = useState([
     { key: 'first', title: 'Socket #1' },
@@ -55,11 +56,21 @@ const RoomState = ({ route }) => {
   });
 
   const renderTabBar = (props:any) => (
-    <TabBar
-      {...props}
-      indicatorStyle={{ backgroundColor: globalStyles.colors.secondary }}
-      style={{ backgroundColor: globalStyles.colors.background }}
-    />
+    <>
+      <TabBar
+        {...props}
+        indicatorStyle={{ backgroundColor: globalStyles.colors.secondary }}
+        style={{ backgroundColor: globalStyles.colors.background }}
+      />
+      <View style={styles.navButtons}>
+        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Scheduling', { socketId: sockets[index].socket_id })}>
+          <Text style={styles.navText}>Schedules</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton} onPress={() => console.log("Goals")}>
+          <Text style={styles.navText}>Goals</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 
   useEffect(() => {
@@ -135,5 +146,24 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  navButtons: {
+    flexDirection: 'row',
+    marginHorizontal: 20,
+    marginTop: 10,
+    justifyContent: 'space-between',
+    backgroundColor: globalStyles.colors.background,
+    padding: 10,
+  },
+  navButton: {
+    backgroundColor: globalStyles.colors.primary,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 15,
+  },
+  navText: {
+    color: globalStyles.colors.background,
+    textAlign: 'center',
+    fontSize: 16,
   }
 });

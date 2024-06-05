@@ -42,7 +42,6 @@ const DeviceCard = ({device, onStateToggle, onDeleteDevice}) => {
       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
         <Image source={require('../../assets/imgs/electricity-logo.png')} style={{ width: 35, height: 35 }} />
         <View style={{marginRight: 'auto'}}>
-          {/* <Text style={{color: globalStyles.colors.secondary, fontSize: 20, marginLeft: 10, fontWeight: 'bold'}}>{energyUsage.toFixed(1)}kW</Text> */}
           <Text style={{color: globalStyles.colors.secondary, fontSize: 12, marginLeft: 10}}>Energy Usage</Text>
         </View>
         <Button 
