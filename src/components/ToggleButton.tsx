@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import globalStyles from '../../constants/globalStyles';
+import API_URL from '../../config';
 
 const ToggleButton = ({ socket, onToggle }) => {
   const [state, setState] = useState(socket.state);
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const response = axios.get(`${API_URL}/CurrentController/GetCurrent/${socket.socket_id}`);
+    // setCurrent(response.data.current);
+  }, []);
 
   return (
     <TouchableOpacity style={[styles.circleButton, {shadowColor: state ? '#00ff00' : 'transparent'}]} onPress={() => {
       onToggle(socket);
       setState(prev => !prev);
     }}>
+      <Text style={styles.currentReading}>2 kW</Text>
       <Icon style={styles.icon}
         name={'power'}
         size={50}
@@ -38,4 +47,9 @@ const styles = StyleSheet.create({
   icon: {
     marginTop: 95,
   },
+  currentReading: {
+    textAlign: 'center',
+    color: globalStyles.colors.secondary,
+    fontSize: 40,
+  }
 });

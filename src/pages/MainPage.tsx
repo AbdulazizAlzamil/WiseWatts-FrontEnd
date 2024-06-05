@@ -11,6 +11,7 @@ import Prompt from 'react-native-prompt-crossplatform';
 
 import globalStyles from '../../constants/globalStyles';
 import DeviceCard from '../components/DeviceCard';
+import API_URL from '../../config';
 
 const MainPage = ({ navigation }) => {
   const [index, setIndex] = useState(0);
@@ -21,15 +22,14 @@ const MainPage = ({ navigation }) => {
   const [rooms, setRooms] = useState<any[]>([]);
   const [devices, setDevices] = useState([]);
   const [sockets, setSockets] = useState([]);
-  const [hourlyConsumption, setHourlyConsumptions] = useState([]);
 
   const handleStateToggle = async (deviceId) => {
-    await axios.put(`http://192.168.1.24:3000/WisewattsDeviceController/ToggleDevice/${deviceId}`);
+    await axios.put(`${API_URL}/WisewattsDeviceController/ToggleDevice/${deviceId}`);
   }
 
   const handleDeleteDevice = async (deviceId) => {
     try {
-      await axios.delete(`http://192.168.1.24:3000/WisewattsDeviceController/DeleteDevice/${deviceId}`);
+      await axios.delete(`${API_URL}/WisewattsDeviceController/DeleteDevice/${deviceId}`);
       await getDevices();
       await getRooms();
     } catch (err) {
@@ -40,7 +40,7 @@ const MainPage = ({ navigation }) => {
 
   const addDevice = async (roomName) => {
     try {
-      await axios.post('http://192.168.1.24:3000/WisewattsDeviceController/CreateDevice', {
+      await axios.post(`${API_URL}/WisewattsDeviceController/CreateDevice`, {
         state: false,
         serial_number: Math.floor(Math.random() * (999999 - 111111 + 1)) + 111111,
         room: roomName
@@ -55,7 +55,7 @@ const MainPage = ({ navigation }) => {
 
   const getDevices = async () => {
     try {
-      const response = await axios.get('http://192.168.1.24:3000/WisewattsDeviceController/FindAllDevices');
+      const response = await axios.get(`${API_URL}/WisewattsDeviceController/FindAllDevices`);
       const data = response.data;
       setDevices(data);
     } catch (err) {
@@ -66,7 +66,7 @@ const MainPage = ({ navigation }) => {
 
   const getRooms = async () => {
     try {
-      const response = await axios.get('http://192.168.1.24:3000/WisewattsDeviceController/FindAllDevices');
+      const response = await axios.get(`${API_URL}/WisewattsDeviceController/FindAllDevices`);
       const data = response.data;
       
       const uniqueRooms = [...new Set(['All Devices', ...data.map(device => device.room)])];
@@ -82,7 +82,7 @@ const MainPage = ({ navigation }) => {
 
   const getSockets = async () => {
     try {
-      const response = await axios.get('http://192.168.1.24:3000/SocketController/FindAllSockets');
+      const response = await axios.get(`${API_URL}/SocketController/FindAllSockets`);
       const data = response.data;
       setSockets(data);
     } catch(err) {

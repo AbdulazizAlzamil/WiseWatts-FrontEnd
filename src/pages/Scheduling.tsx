@@ -6,6 +6,7 @@ import { Card } from '@rneui/themed';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import globalStyles from "../../constants/globalStyles";
+import API_URL from '../../config';
 
 const Scheduling = ({ route }) => {
 	const { socketId } = route.params;
@@ -28,7 +29,7 @@ const Scheduling = ({ route }) => {
 			return schedule;
 		}));
 
-		await axios.put(`http://192.168.1.31:3000/ScheduleController/ToggleSchedule`, {
+		await axios.put(`${API_URL}/ScheduleController/ToggleSchedule`, {
 			schedule_id: scheduleId,
 		});
 	}
@@ -55,18 +56,18 @@ const Scheduling = ({ route }) => {
 			setSchedules([...schedules, {...schedule, start_date: time.toLocaleTimeString(), end_date: time.toLocaleTimeString()}]);
 			setModalVisible(false);
 
-			await axios.post(`http://192.168.1.31:3000/ScheduleController/CreateSchedule/`, schedule);
+			await axios.post(`${API_URL}/ScheduleController/CreateSchedule/`, schedule);
 			getSchedules();
 	};
 
 	const deleteSchedule = async (scheduleId: number) => {
 			const newSchedules = schedules.filter(schedule => schedule.schedule_id !== scheduleId);
 			setSchedules(newSchedules);
-			await axios.delete(`http://192.168.1.31:3000/ScheduleController/DeleteSchedule/${scheduleId}`);
+			await axios.delete(`${API_URL}/ScheduleController/DeleteSchedule/${scheduleId}`);
 	};
 
 	const getSchedules = async () => {
-		const response = await axios.get(`http://192.168.1.31:3000/ScheduleController/FindScheduleBySocket/${socketId}`);
+		const response = await axios.get(`${API_URL}/ScheduleController/FindScheduleBySocket/${socketId}`);
 		const schedules = response.data.map(schedule => {
 			
 			const date = new Date(schedule.start_date);
@@ -213,10 +214,10 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     centeredView: {
-        flex: 1,
+        // flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 22,
+        marginTop: 300,
     },
     modalView: {
 				gap: 10,
@@ -260,11 +261,12 @@ const styles = StyleSheet.create({
     },
     button: {
         width: '90%',
+				
         alignSelf: 'center',
         marginTop: 'auto',
         backgroundColor: globalStyles.colors.primary,
         // position: 'absolute',
-        // bottom: 50,
+        // bottom: 20,
     },
 		card: {
 			width: '90%',

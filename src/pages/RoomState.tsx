@@ -5,6 +5,7 @@ import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 import globalStyles from "../../constants/globalStyles";
 import ToggleButton from '../components/ToggleButton';
+import API_URL from '../../config';
 
 const initialLayout = { width: 320 };
 
@@ -21,7 +22,7 @@ const RoomState = ({ route, navigation }) => {
 
   const handleToggle = async (socket) => {
     try {
-      await axios.post(`http://192.168.1.24:3000/CommandController/CreateCommand`, {
+      await axios.post(`${API_URL}/CommandController/CreateCommand`, {
         socket_id: socket.socket_id,
         device_id: socket.device_id,
       })
@@ -76,7 +77,7 @@ const RoomState = ({ route, navigation }) => {
   useEffect(() => {
     const fetchSockets = async () => {
       try {
-        const response = await axios.get(`http://192.168.1.24:3000/SocketController/FindSocketsByDevice/${deviceId}`);
+        const response = await axios.get(`${API_URL}/SocketController/FindSocketsByDevice/${deviceId}`);
         const data = response.data;
         setSockets(data);
         setRoutes([
@@ -96,7 +97,7 @@ const RoomState = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Device #1</Text>
+        <Text style={styles.headerTitle}>Device {deviceId}</Text>
       </View>
 
       <TabView

@@ -53,6 +53,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     alignItems: 'center',
+    borderBottomRightRadius: 30,
+    borderBottomLeftRadius: 30,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
   },
   buttonText: {
     fontSize: 18,

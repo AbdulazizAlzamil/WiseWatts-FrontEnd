@@ -1,9 +1,12 @@
 import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import globalStyles from "../../constants/globalStyles";
+import API_URL from '../../config';
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
@@ -12,15 +15,20 @@ const LoginSchema = Yup.object().shape({
 
 const Login = ({navigation}) => {
 
-  const handleLogin = (values) => {
-    // Dummy login values until you idiots connect the API....<3
-    if (values.email === 'user@example.com' && values.password === 'password') {
-      // Navigate to the Main Page if credentials are correct
+  const handleLogin = async (values) => {
+    const response = await axios.post(`${API_URL}/LoginController/Login`, {
+      email: values.email,
+      password: values.password,
+    });
+    console.log(response.data);
+    
+    if(response.data.status === 'accepted') {
+      await AsyncStorage.setItem('token', response.data.jwtString);
+      await AsyncStorage.setItem('userId', response.data.user_id.toString());
       navigation.navigate('Main Page');
-    } else {
-      console.log('Invalid email or password');
-      
     }
+    else
+      Alert.alert('Login Failed', 'Invalid email or password');
   };
 
   return (
@@ -28,9 +36,7 @@ const Login = ({navigation}) => {
       initialValues={{ email: '', password: '' }}
       validationSchema={LoginSchema}
       onSubmit={(values) => {
-        // Handle login logic here
         handleLogin(values);
-        console.log('Login form submitted with values:', values);
       }}
     >
       {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
@@ -56,10 +62,10 @@ const Login = ({navigation}) => {
           {errors.password && <Text style={styles.error}>{errors.password}</Text>}
 
           <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
-              <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
 
-            <View style={styles.signupText}>
+          <View style={styles.signupText}>
             <Text style={styles.signup}>New user? </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
               <Text style={[styles.signup, styles.signupLink]}>Create a new account</Text>
@@ -111,11 +117,16 @@ const styles = StyleSheet.create({
       },
       button: {
         backgroundColor: globalStyles.colors.primary,
-        padding: 15,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
         borderRadius: 5,
         marginHorizontal: 20,
         marginBottom: 5, // Add some space at the bottom
         alignItems: 'center',
+        borderBottomRightRadius: 30,
+        borderBottomLeftRadius: 30,
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
       },
       buttonText: {
         color: 'black',
@@ -134,6 +145,4 @@ const styles = StyleSheet.create({
         color: globalStyles.colors.secondary,
         textDecorationLine: 'underline',
       },
-
-
 })

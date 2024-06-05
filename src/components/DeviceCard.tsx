@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Switch } from 'react-native'
 import { Card } from '@rneui/themed';
 import { Button, Divider } from 'react-native-paper';
 import { Image } from 'expo-image';
+import API_URL from '../../config';
 
 import globalStyles from '../../constants/globalStyles';
 
@@ -15,7 +16,7 @@ const DeviceCard = ({device, onStateToggle, onDeleteDevice}) => {
   useEffect(() => {
     const getDeviceState = async () => {
       try {
-        const response = await axios.get(`http://192.168.1.24:3000/WisewattsDeviceController/FindDeviceById/${device.device_id}`);
+        const response = await axios.get(`${API_URL}/WisewattsDeviceController/FindDeviceById/${device.device_id}`);
         setIsEnabled(response.data[0].state);
       } catch (err) {
         console.error(err);

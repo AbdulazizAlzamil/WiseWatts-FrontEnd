@@ -1,11 +1,13 @@
 import React from 'react';
+import axios from 'axios';
 import {View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import globalStyles from "../../constants/globalStyles";
+import API_URL from '../../config';
 
-const Signup = () => {
+const Signup = ({ navigation }) => {
     const SignupSchema = Yup.object().shape({
         username: Yup.string().required('Username is required'),
         email: Yup.string().email('Invalid email').required('Email is required'),
@@ -21,15 +23,29 @@ const Signup = () => {
             .required('Confirm Password is required'),
     });
 
+    const register = async (values) => {
+      console.log(values);
+      
+      if(values.password !== values.confirmPassword) {
+        Alert.alert('Registration Failed', 'Passwords do not match');
+      } else {
+        console.log("Inside else");
+        
+        await axios.post(`${API_URL}/WiseUserController/Register`, {
+          user_name: values.username,
+          email: values.email,
+          password: values.password,
+        });
+      }
+    }
+
     return (
         <View style={styles.container}>
           <Text style={styles.headerText}>Create your account:</Text>
           <Formik
             initialValues={{ username: '', email: '', password: '', confirmPassword: '' }}
             validationSchema={SignupSchema}
-            onSubmit={values => {
-              Alert.alert('Signup Successful', `Welcome, ${values.username}!`);
-            }}
+            onSubmit={values => register(values)}
           >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
               <View>
@@ -73,8 +89,15 @@ const Signup = () => {
                 {touched.confirmPassword && errors.confirmPassword && <Text style={styles.error}>{errors.confirmPassword}</Text>}
     
                 <TouchableOpacity style={styles.button} onPress={() => handleSubmit()}>
-              <Text style={styles.buttonText}>Sign Up</Text>
-            </TouchableOpacity>
+                  <Text style={styles.buttonText}>Sign Up</Text>
+                </TouchableOpacity>
+
+                <View style={{flexDirection: 'row', justifyContent: 'center', gap: 5}}>
+                  <Text style={{textAlign: 'center', color: "#fff"}}>Already have an account?</Text>
+                  <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                      <Text style={[styles.signup, styles.signupLink]}>Sign in</Text>
+                  </TouchableOpacity> 
+                </View>
               </View>
             )}
           </Formik>
@@ -122,15 +145,27 @@ const styles = StyleSheet.create({
       },
       button: {
         backgroundColor: globalStyles.colors.primary,
-        padding: 15,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
         borderRadius: 5,
         marginHorizontal: 20,
-        marginBottom: 5, // Add some space at the bottom
+        marginBottom: 10, // Add some space at the bottom
         alignItems: 'center',
+        borderBottomRightRadius: 30,
+        borderBottomLeftRadius: 30,
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
       },
       buttonText: {
         color: 'black',
         fontSize: 16,
         fontWeight: 'bold',
       },
+      signup: {
+        color: 'white',
+      },
+      signupLink: {
+        color: globalStyles.colors.secondary,
+        textDecorationLine: 'underline',
+      }
 })
