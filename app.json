@@ -24,9 +24,9 @@
     "plugins": [
       [
         "expo-font",
-        {
-          "fonts": ["/assets/fonts/POPPINS-MEDIUM.TTF"]
-        }
+      {
+        "fonts": ["node_modules/@expo-google-fonts/inter/Inter_100Thin.ttf"]
+      }
       ]
     ]
   }

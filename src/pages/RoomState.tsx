@@ -21,7 +21,7 @@ const RoomState = ({ route, navigation }) => {
 
   const handleToggle = async (socket) => {
     try {
-      await axios.post(`http://192.168.1.31:3000/CommandController/CreateCommand`, {
+      await axios.post(`http://192.168.1.24:3000/CommandController/CreateCommand`, {
         socket_id: socket.socket_id,
         device_id: socket.device_id,
       })
@@ -76,7 +76,7 @@ const RoomState = ({ route, navigation }) => {
   useEffect(() => {
     const fetchSockets = async () => {
       try {
-        const response = await axios.get(`http://192.168.1.31:3000/SocketController/FindSocketsByDevice/${deviceId}`);
+        const response = await axios.get(`http://192.168.1.24:3000/SocketController/FindSocketsByDevice/${deviceId}`);
         const data = response.data;
         setSockets(data);
         setRoutes([

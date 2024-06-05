@@ -15,7 +15,7 @@ const DeviceCard = ({device, onStateToggle, onDeleteDevice}) => {
   useEffect(() => {
     const getDeviceState = async () => {
       try {
-        const response = await axios.get(`http://192.168.1.31:3000/WisewattsDeviceController/FindDeviceById/${device.device_id}`);
+        const response = await axios.get(`http://192.168.1.24:3000/WisewattsDeviceController/FindDeviceById/${device.device_id}`);
         setIsEnabled(response.data[0].state);
       } catch (err) {
         console.error(err);

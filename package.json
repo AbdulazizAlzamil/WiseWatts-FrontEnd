@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@eva-design/eva": "^2.2.0",
+    "@expo-google-fonts/inter": "^0.2.3",
     "@expo/vector-icons": "^14.0.0",
     "@react-native-community/datetimepicker": "^8.0.1",
     "@react-navigation/native": "^6.1.17",
@@ -23,7 +24,9 @@
     "expo": "^50.0.17",
     "expo-font": "~11.10.3",
     "expo-image": "~1.10.6",
+    "expo-splash-screen": "^0.27.4",
     "expo-status-bar": "~1.11.1",
+    "formik": "^2.4.6",
     "json-server": "^1.0.0-alpha.23",
     "random": "^4.1.0",
     "react": "18.2.0",
@@ -45,7 +48,8 @@
     "react-native-vector-icons": "^10.0.3",
     "typescript": "^5.3.0",
     "uuid": "^9.0.1",
-    "yarn": "^1.22.22"
+    "yarn": "^1.22.22",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
