@@ -10,16 +10,25 @@ const ToggleButton = ({ socket, onToggle }) => {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    const response = axios.get(`${API_URL}/CurrentController/GetCurrent/${socket.socket_id}`);
-    // setCurrent(response.data.current);
-  }, []);
+    const getCurrentValue = async () => {
+      const response = await axios.get(`${API_URL}/CurrentController/GetCurrent/${socket.socket_id}`);
+      setCurrent(response.data.current);
+      console.log(response.data.current)
+    }
 
+    const interval = setInterval(() => {
+      getCurrentValue();
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+  
   return (
     <TouchableOpacity style={[styles.circleButton, {shadowColor: state ? '#00ff00' : 'transparent'}]} onPress={() => {
       onToggle(socket);
       setState(prev => !prev);
     }}>
-      <Text style={styles.currentReading}>2 kW</Text>
+      <Text style={styles.currentReading}>{current} W</Text>
       <Icon style={styles.icon}
         name={'power'}
         size={50}
