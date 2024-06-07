@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 // import { v4 as uuid } from 'uuid';
 // import random from 'random'
-import { Text, View, StyleSheet, Alert, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Alert, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Image } from 'expo-image';
 import { Tab, TabView, Card } from '@rneui/themed';
 import { Button, Divider } from 'react-native-paper';
@@ -22,6 +22,7 @@ const MainPage = ({ navigation }) => {
   const [rooms, setRooms] = useState<any[]>([]);
   const [devices, setDevices] = useState([]);
   const [sockets, setSockets] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handleStateToggle = async (deviceId) => {
     await axios.put(`${API_URL}/WisewattsDeviceController/ToggleDevice/${deviceId}`);
@@ -61,9 +62,11 @@ const MainPage = ({ navigation }) => {
     } catch (err) {
       console.log("getDevices error");
       console.error(err);
+    } finally {
+      setLoading(false); // Set loading to false after data is fetched
     }
   };
-
+  
   const getRooms = async () => {
     try {
       const response = await axios.get(`${API_URL}/WisewattsDeviceController/FindAllDevices`);
@@ -73,13 +76,14 @@ const MainPage = ({ navigation }) => {
       console.log(uniqueRooms);
       
       setRooms(uniqueRooms);
-
     } catch (err) {
       console.log("getRoom error");
       console.error(err);
+    } finally {
+      setLoading(false); // Set loading to false after data is fetched
     }
   }
-
+  
   const getSockets = async () => {
     try {
       const response = await axios.get(`${API_URL}/SocketController/FindAllSockets`);
@@ -88,8 +92,10 @@ const MainPage = ({ navigation }) => {
     } catch(err) {
       console.log("getSockets error");
       console.log(err);
+    } finally {
+      setLoading(false); // Set loading to false after data is fetched
     }
-  }
+  }  
   
   useEffect(() => {
     getDevices();
@@ -97,7 +103,7 @@ const MainPage = ({ navigation }) => {
     getSockets();
   }, []);
 
-  return (  
+  return (
     <View style={styles.container}>
       <View style={[StyleSheet.absoluteFill, { marginTop: 20, gap: 20 }]}>
         <View style={styles.headerContainer}>
@@ -109,55 +115,61 @@ const MainPage = ({ navigation }) => {
           />
           {/* <Text style={styles.headerText}>{username}'s House</Text> */}
         </View>
-
-        <Tab
-          scrollable={rooms.length > 3}
-          value={index}
-          onChange={(e) => setIndex(e)}
-          indicatorStyle={{
-            backgroundColor: globalStyles.colors.primary,
-            height: 3,
-          }}
-          variant="default"
-        >
-          {rooms.map((category, index) => (
-            <Tab.Item
-              key={index}
-              title={category}
-              titleStyle={{ fontSize: 16, color: '#fff' }}
-            />
-          ))}
-        </Tab>
-
-        <TabView value={index} onChange={setIndex} animationType="spring">
-          {rooms.map((room, index) => {
-            return (
-              <TabView.Item style={styles.tabViewItem} key={index}>
-                <ScrollView style={{flex: 1}} showsVerticalScrollIndicator>
-                  <View style={{ gap: 10 }}>
-                    {devices.filter(device => (index === 0) ? true : device.room === room).map((device, index) => {
-                      return (
-                        <TouchableOpacity
-                          onPress={() => navigation.navigate('Room State', { deviceId: device.device_id })}
-                          key={index}
-                        >
-                          <DeviceCard
-                            key={device.device_id}
-                            device={device}
-                            // energyUsage={getEnergyUsage(device.device_id)}
-                            onStateToggle={handleStateToggle}
-                            onDeleteDevice={handleDeleteDevice}
-                          />
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </View>
-                </ScrollView>
-              </TabView.Item>
-            )
-          })}
-        </TabView>
-
+  
+        {loading ? (
+          <ActivityIndicator size="large" color={globalStyles.colors.primary} />
+        ) : (
+          <>
+            <Tab
+              scrollable={rooms.length > 3}
+              value={index}
+              onChange={(e) => setIndex(e)}
+              indicatorStyle={{
+                backgroundColor: globalStyles.colors.primary,
+                height: 3,
+              }}
+              variant="default"
+            >
+              {rooms.map((category, index) => (
+                <Tab.Item
+                  key={index}
+                  title={category}
+                  titleStyle={{ fontSize: 16, color: '#fff' }}
+                />
+              ))}
+            </Tab>
+  
+            <TabView value={index} onChange={setIndex} animationType="spring">
+              {rooms.map((room, index) => {
+                return (
+                  <TabView.Item style={styles.tabViewItem} key={index}>
+                    <ScrollView style={{flex: 1}} showsVerticalScrollIndicator>
+                      <View style={{ gap: 10 }}>
+                        {devices.filter(device => (index === 0) ? true : device.room === room).map((device, index) => {
+                          return (
+                            <TouchableOpacity
+                              onPress={() => navigation.navigate('Room State', { deviceId: device.device_id })}
+                              key={index}
+                            >
+                              <DeviceCard
+                                key={device.device_id}
+                                device={device}
+                                // energyUsage={getEnergyUsage(device.device_id)}
+                                onStateToggle={handleStateToggle}
+                                onDeleteDevice={handleDeleteDevice}
+                              />
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </View>
+                    </ScrollView>
+                  </TabView.Item>
+                )
+              })}
+            </TabView>
+          </>
+        )}
+  
         <Button
           labelStyle={{ color: globalStyles.colors.background }}
           style={styles.button}
@@ -218,8 +230,7 @@ const MainPage = ({ navigation }) => {
         )}
       </View>
     </View>
-  );
-  
+  ); 
 };
 
 export default MainPage;
