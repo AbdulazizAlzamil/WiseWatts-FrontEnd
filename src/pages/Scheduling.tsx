@@ -91,16 +91,16 @@ const Scheduling = ({ route }) => {
 		<View style={styles.container}>
 			<View style={styles.header}>
 				<Text style={styles.headerTitle}>Schedules</Text>
+				<RNPButton
+					labelStyle={{ color: globalStyles.colors.background}}
+					style={styles.button}
+					icon="plus"
+					mode="contained"
+					onPress={() => setModalVisible(true)}
+					children="Add Schedule"
+				/>
 			</View>
 			<View style={styles.scene}>
-					<RNPButton
-						labelStyle={{ color: globalStyles.colors.background }}
-						style={styles.button}
-						icon="plus"
-						mode="contained"
-						onPress={() => setModalVisible(true)}
-						children="Add Schedule"
-					/>
 					<FlatList
 							data={schedules}
 							keyExtractor={(_, index) => index.toString()}
@@ -195,11 +195,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     header: {
+				marginHorizontal: 20,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         height: 70,
 				marginBottom: 20,
+				marginTop: 10,
         backgroundColor: globalStyles.colors.background,
     },
     headerTitle: {
@@ -260,13 +262,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     button: {
-        width: '90%',
-				
+        // width: '90%',
         alignSelf: 'center',
-        marginTop: 'auto',
         backgroundColor: globalStyles.colors.primary,
-        // position: 'absolute',
-        // bottom: 20,
     },
 		card: {
 			width: '90%',
