@@ -15,7 +15,9 @@ const ToggleButton = ({ socket, onToggle }) => {
       setLoading(true);
       try {
         const response = await axios.get(`${API_URL}/CurrentController/GetCurrent/${socket.socket_id}`);
-        setCurrent(response.data.current);
+        if (response.data.current) {
+          setCurrent(response.data.current);
+        }
       } catch (error) {
         console.error('Error fetching current value:', error);
       } finally {
@@ -38,11 +40,7 @@ const ToggleButton = ({ socket, onToggle }) => {
       onToggle(socket);
       setState(prev => !prev);
     }}>
-      {loading ? (
-        <ActivityIndicator size="large" color={'#494958'} />
-      ) : (
-        <Text style={styles.currentReading}>{state && current ? `${current}W` : null}</Text>
-      )}
+      <Text style={styles.currentReading}>{(state && current) ? `${current}W` : null}</Text>
       <View style={styles.icon}>
         <Icon
           name={'power'}
